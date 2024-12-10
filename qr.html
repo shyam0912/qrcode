@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code from Link</title>
+  <style>
+    #qrcode {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Code Generator for Links</h1>
+  <input type="url" id="link" placeholder="Enter a URL (e.g., https://example.com)" />
+  <button id="generate">Generate QR Code</button>
+  <div id="qrcode"></div>
+  <a id="download" href="#" download="qrcode.png" style="display: none;">Download QR Code</a>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    document.getElementById("generate").addEventListener("click", function() {
+      const link = document.getElementById("link").value.trim();
+      const qrContainer = document.getElementById("qrcode");
+      const downloadLink = document.getElementById("download");
+
+      // Clear previous QR code
+      qrContainer.innerHTML = "";
+
+      if (!link || !link.startsWith("http")) {
+        alert("Please enter a valid URL (e.g., https://example.com)!");
+        return;
+      }
+
+      // Generate QR code
+      const qrCode = new QRCode(qrContainer, {
+        text: link,
+        width: 200,
+        height: 200,
+      });
+
+      // Ensure the QR code is generated before accessing its canvas
+      setTimeout(() => {
+        const canvas = qrContainer.querySelector("canvas");
+        if (canvas) {
+          const qrImage = canvas.toDataURL("image/png");
+          downloadLink.href = qrImage;
+          downloadLink.style.display = "inline-block";
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>
